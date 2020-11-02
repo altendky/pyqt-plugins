@@ -39,21 +39,22 @@ pyqt5_plugins_version = '{}.{}'.format(
     pyqt5_plugins_wrapper_version,
 )
 
+# When using ~=, don't pad because that affects allowed versions.  The last
+# segment is the one that is allowed to increase.
+qt_applications_wrapper_version = '1.0'
 
-# such as: ' @ git+https://github.com/altendky/qt-applications@main'
-# or empty when using a regular index
-qt_applications_url = ''
+# Must be False for release.  PyPI won't let you uplaod with a URL dependency.
+use_qt_applications_url = True
 
-if qt_applications_url == '':
-    # When using ~=, don't pad because that affects allowed versions.  The last
-    # segment is the one that is allowed to increase.
-    qt_applications_wrapper_version = '1.0'
+if use_qt_applications_url:
+    qt_applications_url = ' @ git+https://github.com/altendky/qt-applications@main'
+    qt_applications_version_specifier = ''
+else:
+    qt_applications_url = ''
     qt_applications_version_specifier = '~={}.{}.dev0'.format(
         qt_version,
         qt_applications_wrapper_version,
     )
-else:
-    qt_applications_version_specifier = ''
 
 
 with open('README.rst') as f:
