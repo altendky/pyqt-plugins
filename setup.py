@@ -48,7 +48,7 @@ if qt_applications_url == '':
     # When using ~=, don't pad because that affects allowed versions.  The last
     # segment is the one that is allowed to increase.
     qt_applications_wrapper_version = '1.0'
-    qt_applications_version_specifier = '~={}.{}'.format(
+    qt_applications_version_specifier = '~={}.{}.dev0'.format(
         qt_version,
         qt_applications_wrapper_version,
     )
