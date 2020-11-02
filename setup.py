@@ -31,7 +31,7 @@ def pad_version(v, segment_count=3):
 #       in some other way?
 pyqt_version = pad_version(os.environ.setdefault('PYQT_VERSION', '5.15.1'))
 qt_version = pad_version(os.environ.setdefault('QT_VERSION', '5.15.1'))
-
+qt_major_version = qt_version.partition('.')[0]
 
 pyqt5_plugins_wrapper_version = versioneer.get_versions()['version']
 pyqt5_plugins_version = '{}.{}'.format(
@@ -105,7 +105,8 @@ setuptools.setup(
     install_requires=[
         'click',
         'pyqt5=={}'.format(os.environ['PYQT_VERSION']),
-        'qt-applications{}{}'.format(
+        'qt{}-applications{}{}'.format(
+            qt_major_version,
             qt_applications_version_specifier,
             qt_applications_url,
         ),
