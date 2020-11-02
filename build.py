@@ -813,7 +813,7 @@ def patch_pyqt(configuration, qt_paths):
         / 'pluginloader.{}.patch'.format(configuration.pyqt_version)
     )
 
-    patchset = patch.fromfile(patch_path)
+    patchset = patch.fromfile(fspath(patch_path))
     patchset.apply(strip=1)
 
 
