@@ -40,6 +40,22 @@ pyqt5_plugins_version = '{}.{}'.format(
 )
 
 
+# such as: ' @ git+https://github.com/altendky/qt-applications@main'
+# or empty when using a regular index
+qt_applications_url = ''
+
+if qt_applications_url == '':
+    # When using ~=, don't pad because that affects allowed versions.  The last
+    # segment is the one that is allowed to increase.
+    qt_applications_wrapper_version = '1.0'
+    qt_applications_version_specifier = '~={}.{}'.format(
+        qt_version,
+        qt_applications_wrapper_version,
+    )
+else:
+    qt_applications_version_specifier = ''
+
+
 with open('README.rst') as f:
     readme = f.read()
 
@@ -89,6 +105,9 @@ setuptools.setup(
     install_requires=[
         'click',
         'pyqt5=={}'.format(os.environ['PYQT_VERSION']),
-        'qt5-applications @ git+https://github.com/altendky/pyqt5-tools@just_applications',
+        'qt-applications{}{}'.format(
+            qt_applications_version_specifier,
+            qt_applications_url,
+        ),
     ],
 )

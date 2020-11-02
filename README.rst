@@ -18,7 +18,7 @@ adjustment of the wrappers.
    :alt: supported Python versions
    :target: https://pypi.org/project/pyqt5-plugins/
 
-.. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/pyqt-plugins/master.svg
+.. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/pyqt-plugins/main.svg
    :alt: source on GitHub
    :target: https://github.com/altendky/pyqt-plugins
 
