@@ -22,4 +22,4 @@ adjustment of the wrappers.
    :alt: source on GitHub
    :target: https://github.com/altendky/pyqt-plugins
 
-.. _`the pyqt5-tools readme`: https://github.com/altendky/pyqt5-tools
+.. _`the pyqt5-tools readme`: https://github.com/altendky/pyqt-tools#pyqt-tools
