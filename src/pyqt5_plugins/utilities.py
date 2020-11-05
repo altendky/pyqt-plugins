@@ -14,7 +14,7 @@ fspath = getattr(os, 'fspath', str)
 
 diagnostic_variables_to_print = [
     'DISPLAY',
-    'LD_LIBRARY_PATH'
+    'LD_LIBRARY_PATH',
     'PYQTDESIGNERPATH',
     'PYTHONPATH',
     'PATH',
