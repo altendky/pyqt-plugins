@@ -1,7 +1,6 @@
 import os
 import pathlib
 import sys
-import sysconfig
 
 import qt5_applications
 import PyQt5
