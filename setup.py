@@ -1,21 +1,16 @@
 import os
 import pathlib
-import sys
 
-here = pathlib.Path(__file__).parent
+import setuptools
+import versioneer
+
+import build
 
 
 fspath = getattr(os, 'fspath', str)
 
 
-sys.path.insert(0, fspath(here))
-# TODO: yuck, put the build command in a separate project and
-#       build-requires it?
-import build
-sys.path.pop(0)
-
-import setuptools
-import versioneer
+here = pathlib.Path(__file__).parent
 
 
 class InvalidVersionError(Exception):
