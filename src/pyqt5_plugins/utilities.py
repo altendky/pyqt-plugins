@@ -1,7 +1,6 @@
 import os
 import pathlib
 import sys
-import sysconfig
 
 import qt5_applications
 import PyQt5
@@ -14,7 +13,7 @@ fspath = getattr(os, 'fspath', str)
 
 diagnostic_variables_to_print = [
     'DISPLAY',
-    'LD_LIBRARY_PATH'
+    'LD_LIBRARY_PATH',
     'PYQTDESIGNERPATH',
     'PYTHONPATH',
     'PATH',
