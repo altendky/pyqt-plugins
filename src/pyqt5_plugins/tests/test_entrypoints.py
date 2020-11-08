@@ -81,7 +81,6 @@ def test_designer_creates_test_widget(tmp_path, environment):
 
     contents = run_for_file(
         [fspath(qt5_applications.application_path('designer'))],
-        check=True,
         env=environment,
         file_path=file_path,
     )
@@ -107,7 +106,6 @@ def test_qmlscene_paints_test_item(tmp_path, environment):
             fspath(qt5_applications.application_path('qmlscene')),
             fspath(qml_example_path),
         ],
-        check=True,
         env=environment,
         file_path=file_path,
     )
@@ -131,7 +129,6 @@ def test_qmltestrunner_paints_test_item(tmp_path, environment):
             '-input',
             qml_test_path,
         ],
-        check=True,
         env=environment,
         file_path=file_path,
     )
