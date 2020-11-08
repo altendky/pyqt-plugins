@@ -37,7 +37,7 @@ def run_for_file(
         file_path,
         file_exists_timeout=60,
         file_write_time_allowance=5,
-        **kwargs,
+        **kwargs
 ):
     process = subprocess.Popen(*args, **kwargs)
 
@@ -133,6 +133,7 @@ def test_qmltestrunner_paints_test_item(tmp_path, environment):
         ],
         check=True,
         env=environment,
+        file_path=file_path,
     )
 
     assert contents == pyqt5_plugins.examples.exampleqmlitem.test_file_contents
