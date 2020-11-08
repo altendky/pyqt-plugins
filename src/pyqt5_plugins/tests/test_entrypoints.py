@@ -34,10 +34,10 @@ def environment_fixture():
 
 def run_for_file(
         *args,
-        **kwargs,
         file_path,
         file_exists_timeout=60,
         file_write_time_allowance=5,
+        **kwargs,
 ):
     process = subprocess.Popen(*args, **kwargs)
 
