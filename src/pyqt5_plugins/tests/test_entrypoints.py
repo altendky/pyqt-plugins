@@ -52,7 +52,7 @@ def run_for_file(
         if file_path.exists():
             break
 
-        if time.monotonic() < deadline:
+        if time.monotonic() > deadline:
             raise Exception(
                 'file not written with {} seconds'.format(file_exists_timeout),
             )
