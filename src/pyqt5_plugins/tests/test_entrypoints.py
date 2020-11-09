@@ -1,6 +1,7 @@
 import os
 import pathlib
 import subprocess
+import time
 
 import pytest
 import qt5_applications
@@ -31,6 +32,36 @@ def environment_fixture():
     return environment
 
 
+def run_for_file(
+        *args,
+        file_path,
+        file_exists_timeout=60,
+        file_write_time_allowance=5,
+        **kwargs
+):
+    process = subprocess.Popen(*args, **kwargs)
+
+    deadline = time.monotonic() + file_exists_timeout
+
+    while True:
+        time.sleep(1)
+
+        if process.poll() is not None:
+            raise Exception('process ended')
+
+        if file_path.exists():
+            break
+
+        if time.monotonic() > deadline:
+            raise Exception(
+                'file not written with {} seconds'.format(file_exists_timeout),
+            )
+
+    time.sleep(file_write_time_allowance)
+
+    return file_path.read_bytes()
+
+
 def test_designer_creates_test_widget(tmp_path, environment):
     file_path = tmp_path/'tigger'
     environment[pyqt5_plugins.tests.testbutton.test_path_env_var] = fspath(file_path)
@@ -48,18 +79,13 @@ def test_designer_creates_test_widget(tmp_path, environment):
 
     pyqt5_plugins.utilities.print_environment_variables(environment, *vars_to_print)
 
-    with pytest.raises(subprocess.TimeoutExpired):
-        subprocess.run(
-            [fspath(qt5_applications.application_path('designer'))],
-            check=True,
-            env=environment,
-            timeout=20,
-        )
-
-    assert (
-            file_path.read_bytes()
-            == pyqt5_plugins.tests.testbutton.test_file_contents
+    contents = run_for_file(
+        [fspath(qt5_applications.application_path('designer'))],
+        env=environment,
+        file_path=file_path,
     )
+
+    assert contents == pyqt5_plugins.tests.testbutton.test_file_contents
 
 
 qml2_import_paths = (pyqt5_plugins.utilities.fspath(pyqt5_plugins.root),)
@@ -75,21 +101,16 @@ def test_qmlscene_paints_test_item(tmp_path, environment):
 
     pyqt5_plugins.utilities.print_environment_variables(environment, *vars_to_print)
 
-    with pytest.raises(subprocess.TimeoutExpired):
-        subprocess.run(
-            [
-                fspath(qt5_applications.application_path('qmlscene')),
-                fspath(qml_example_path),
-            ],
-            check=True,
-            env=environment,
-            timeout=20,
-        )
-
-    assert (
-            file_path.read_bytes()
-            == pyqt5_plugins.examples.exampleqmlitem.test_file_contents
+    contents = run_for_file(
+        [
+            fspath(qt5_applications.application_path('qmlscene')),
+            fspath(qml_example_path),
+        ],
+        env=environment,
+        file_path=file_path,
     )
+
+    assert contents == pyqt5_plugins.examples.exampleqmlitem.test_file_contents
 
 
 def test_qmltestrunner_paints_test_item(tmp_path, environment):
@@ -110,7 +131,7 @@ def test_qmltestrunner_paints_test_item(tmp_path, environment):
         ],
         check=True,
         env=environment,
-        timeout=20,
+        timeout=60,
     )
 
     assert (
