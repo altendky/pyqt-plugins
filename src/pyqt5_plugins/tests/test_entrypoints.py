@@ -123,14 +123,18 @@ def test_qmltestrunner_paints_test_item(tmp_path, environment):
 
     pyqt5_plugins.utilities.print_environment_variables(environment, *vars_to_print)
 
-    contents = run_for_file(
+    subprocess.run(
         [
             fspath(qt5_applications.application_path('qmltestrunner')),
             '-input',
             qml_test_path,
         ],
+        check=True,
         env=environment,
-        file_path=file_path,
+        timeout=60,
     )
 
-    assert contents == pyqt5_plugins.examples.exampleqmlitem.test_file_contents
+    assert (
+            file_path.read_bytes()
+            == pyqt5_plugins.examples.exampleqmlitem.test_file_contents
+    )
