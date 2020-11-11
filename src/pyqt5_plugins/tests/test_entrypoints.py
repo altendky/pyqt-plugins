@@ -4,7 +4,7 @@ import subprocess
 import time
 
 import pytest
-import qt5_applications
+import qt5_tools
 
 import pyqt5_plugins.entrypoints
 import pyqt5_plugins.examples.exampleqmlitem
@@ -80,7 +80,7 @@ def test_designer_creates_test_widget(tmp_path, environment):
     pyqt5_plugins.utilities.print_environment_variables(environment, *vars_to_print)
 
     contents = run_for_file(
-        [fspath(qt5_applications.application_path('designer'))],
+        [fspath(qt5_tools.application_path('designer'))],
         env=environment,
         file_path=file_path,
     )
@@ -103,7 +103,7 @@ def test_qmlscene_paints_test_item(tmp_path, environment):
 
     contents = run_for_file(
         [
-            fspath(qt5_applications.application_path('qmlscene')),
+            fspath(qt5_tools.application_path('qmlscene')),
             fspath(qml_example_path),
         ],
         env=environment,
@@ -125,7 +125,7 @@ def test_qmltestrunner_paints_test_item(tmp_path, environment):
 
     subprocess.run(
         [
-            fspath(qt5_applications.application_path('qmltestrunner')),
+            fspath(qt5_tools.application_path('qmltestrunner')),
             '-input',
             qml_test_path,
         ],

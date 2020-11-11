@@ -1,10 +1,7 @@
 import os
-import pathlib
 import sys
 
-import qt5_applications
 import qt5_tools
-import PyQt5
 
 import pyqt5_plugins
 
