@@ -1,8 +1,6 @@
 import os
 import sys
 
-import qt5_tools
-
 import pyqt5_plugins
 
 
@@ -22,7 +20,7 @@ diagnostic_variables_to_print = [
 
 
 def create_env(reference):
-    environment = qt5_tools.create_environment(reference=reference)
+    environment = dict(reference)
 
     environment.update(add_to_env_var_path_list(
         env=environment,
