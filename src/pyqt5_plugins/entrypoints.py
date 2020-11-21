@@ -8,6 +8,8 @@ import click
 import qt5_tools
 
 import PyQt5
+
+import pyqt5_plugins
 import pyqt5_plugins.utilities
 import pyqt5_plugins.badplugin
 import pyqt5_plugins.examplebuttonplugin
@@ -92,7 +94,7 @@ def pyqt5designer(
         test_exception_dialog,
         qt_debug_plugins
 ):
-    env = pyqt5_plugins.utilities.create_env(reference=os.environ)
+    env = pyqt5_plugins.create_environment(reference=os.environ)
 
     extras = []
     widget_paths = list(widget_paths)
@@ -166,7 +168,7 @@ def pyqt5qmlscene(
         qt_debug_plugins,
         run_qml_example,
 ):
-    env = pyqt5_plugins.utilities.create_env(os.environ)
+    env = pyqt5_plugins.create_environment(os.environ)
     extras = []
 
     if qmlscene_help:
@@ -223,7 +225,7 @@ def pyqt5qmltestrunner(
         qt_debug_plugins,
         test_qml_example,
 ):
-    env = pyqt5_plugins.utilities.create_env(os.environ)
+    env = pyqt5_plugins.create_environment(os.environ)
     extras = []
 
     if qmltestrunner_help:

@@ -1,5 +1,4 @@
 import os
-import sys
 
 import pyqt5_plugins
 
@@ -17,36 +16,6 @@ diagnostic_variables_to_print = [
     'QT_DEBUG_PLUGINS',
     'QT_PLUGIN_PATH',
 ]
-
-
-def create_env(reference):
-    environment = dict(reference)
-
-    environment.update(add_to_env_var_path_list(
-        env=environment,
-        name='QT_PLUGIN_PATH',
-        before=[],
-        after=[fspath(pyqt5_plugins.pyqt5_plugins_path), fspath(pyqt5_plugins.plugins)],
-    ))
-    # TODO: maybe also
-    # PyQt5.QtCore.QLibraryInfo.location(
-    #    PyQt5.QtCore.QLibraryInfo.PluginsPath,
-    # )
-
-    environment.update(add_to_env_var_path_list(
-        env=environment,
-        name='PYTHONPATH',
-        before=sys.path,
-        after=[''],
-    ))
-    environment.update(add_to_env_var_path_list(
-        env=environment,
-        name='PATH',
-        before=sys.path,
-        after=[''],
-    ))
-
-    return environment
 
 
 def add_to_env_var_path_list(env, name, before, after):
