@@ -43,7 +43,7 @@ pyqt5_plugins_version = '{}.{}'.format(
 qt_tools_wrapper_version = '1.0'
 
 # Must be False for release.  PyPI won't let you uplaod with a URL dependency.
-use_qt_tools_url = True
+use_qt_tools_url = False
 
 if use_qt_tools_url:
     qt_tools_url = ' @ git+https://github.com/altendky/qt-tools@main'
