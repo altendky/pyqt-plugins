@@ -7,7 +7,6 @@ import pytest
 import qt5_tools
 
 import pyqt5_plugins
-import pyqt5_plugins.entrypoints
 import pyqt5_plugins.examples.exampleqmlitem
 import pyqt5_plugins.tests.testbutton
 import pyqt5_plugins.tests.testbuttonplugin
