@@ -38,21 +38,21 @@ pyqt5_plugins_version = '{}.{}'.format(
     pyqt5_plugins_wrapper_version,
 )
 
-# When using ~=, don't pad because that affects allowed versions.  The last
-# segment is the one that is allowed to increase.
-qt_applications_wrapper_version = '1.0'
+# Inclusive of the lower bound and exclusive of the upper
+qt_tools_wrapper_range = ['1', '2']
 
-# Must be False for release.  PyPI won't let you uplaod with a URL dependency.
-use_qt_applications_url = False
+# Must be False for release.  PyPI won't let you upload with a URL dependency.
+use_qt_tools_url = False
 
-if use_qt_applications_url:
-    qt_applications_url = ' @ git+https://github.com/altendky/qt-applications@main'
-    qt_applications_version_specifier = ''
+if use_qt_tools_url:
+    qt_tools_url = ' @ git+https://github.com/altendky/qt-tools@main'
+    qt_tools_version_specifier = ''
 else:
-    qt_applications_url = ''
-    qt_applications_version_specifier = '~={}.{}.dev0'.format(
-        qt_version,
-        qt_applications_wrapper_version,
+    qt_tools_url = ''
+    qt_tools_version_format = '>={qt}.{wrapper[0]}, <{qt}.{wrapper[1]}'
+    qt_tools_version_specifier = qt_tools_version_format.format(
+        qt=qt_version,
+        wrapper=qt_tools_wrapper_range,
     )
 
 
@@ -105,10 +105,10 @@ setuptools.setup(
     install_requires=[
         'click',
         'pyqt5=={}'.format(os.environ['PYQT_VERSION']),
-        'qt{}-applications{}{}'.format(
+        'qt{}-tools{}{}'.format(
             qt_major_version,
-            qt_applications_version_specifier,
-            qt_applications_url,
+            qt_tools_version_specifier,
+            qt_tools_url,
         ),
     ],
 )
