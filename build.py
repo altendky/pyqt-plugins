@@ -49,10 +49,6 @@ class BuildPy(setuptools.command.build_py.build_py):
                 package_path=package_path,
                 build_base_path=cwd / build_command.build_base,
             )
-
-            if getattr(self.distribution, 'entry_points', None) is None:
-                self.distribution.entry_points = {}
-            console_scripts = self.distribution.entry_points.setdefault('console_scripts', [])
         except:
             # something apparently consumes tracebacks (not exception messages)
             # for OSError at least.  let's avoid that silliness.
