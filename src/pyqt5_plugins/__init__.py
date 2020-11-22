@@ -1,7 +1,9 @@
+import os
 import pathlib
 import sys
 
 import PyQt5
+import qt5_tools
 
 from ._version import get_versions
 __version__ = get_versions()['version']
@@ -21,8 +23,10 @@ pyqt5_qml_path = pyqt5_root.joinpath('Qt', 'qml')
 pyqt5_plugins_path = pyqt5_root.joinpath('Qt', 'plugins')
 
 
-def create_environment(reference):
-    environment = dict(reference)
+def create_environment(reference=None):
+    if reference is None:
+        reference = dict(os.environ)
+    environment = qt5_tools.create_environment(reference=reference)
 
     environment.update(pyqt5_plugins.utilities.add_to_env_var_path_list(
         env=environment,
