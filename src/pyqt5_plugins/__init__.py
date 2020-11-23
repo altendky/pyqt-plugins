@@ -1,6 +1,7 @@
 import os
 import pathlib
 import sys
+import sysconfig
 
 import PyQt5
 import qt5_tools
@@ -27,6 +28,14 @@ def create_environment(reference=None):
     if reference is None:
         reference = dict(os.environ)
     environment = qt5_tools.create_environment(reference=reference)
+
+    if sys.platform == 'linux':
+        environment.update(pyqt5_plugins.utilities.add_to_env_var_path_list(
+            env=environment,
+            name='LD_LIBRARY_PATH',
+            before=[],
+            after=[sysconfig.get_config_var('LIBDIR')],
+        ))
 
     environment.update(pyqt5_plugins.utilities.add_to_env_var_path_list(
         env=environment,
