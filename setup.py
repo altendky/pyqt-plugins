@@ -32,7 +32,7 @@ pyqt_version = pad_version(os.environ.setdefault('PYQT_VERSION', '5.15.2'))
 qt_version = pad_version(os.environ.setdefault('QT_VERSION', '5.15.2'))
 qt_major_version = qt_version.partition('.')[0]
 
-pyqt5_plugins_wrapper_version = versioneer.get_versions()['version']
+pyqt5_plugins_wrapper_version = '2.0.1'
 pyqt5_plugins_version = '{}.{}'.format(
     pyqt_version,
     pyqt5_plugins_wrapper_version,
