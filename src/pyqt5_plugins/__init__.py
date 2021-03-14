@@ -4,6 +4,7 @@ import sys
 import sysconfig
 
 import PyQt5
+import PyQt5.QtCore
 import qt5_tools
 
 from ._version import get_versions
@@ -13,15 +14,26 @@ del get_versions
 import pyqt5_plugins.utilities
 
 
+pyqt_version = tuple(
+    int(segment)
+    for segment in PyQt5.QtCore.PYQT_VERSION_STR.split('.')
+)
+
 root = pathlib.Path(__file__).resolve().parent
 # TODO: so apparently qml wants it all lower case...
 if sys.platform == 'win32':
     root = pathlib.Path(pyqt5_plugins.utilities.fspath(root).lower())
-plugins = root.joinpath('Qt', 'plugins')
+
+if pyqt_version >= (5, 15, 4):
+    qt_root = root.joinpath('Qt5')
+else:
+    qt_root = root.joinpath('Qt')
+
+plugins = qt_root.joinpath('plugins')
 
 pyqt5_root = pathlib.Path(PyQt5.__file__).resolve().parent
-pyqt5_qml_path = pyqt5_root.joinpath('Qt', 'qml')
-pyqt5_plugins_path = pyqt5_root.joinpath('Qt', 'plugins')
+pyqt5_qml_path = qt_root.joinpath('qml')
+pyqt5_plugins_path = qt_root.joinpath('plugins')
 
 
 def create_environment(reference=None):
