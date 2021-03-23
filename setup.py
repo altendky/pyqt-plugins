@@ -28,7 +28,7 @@ def pad_version(v, segment_count=3):
 
 # TODO: really doesn't seem quite proper here and probably should come
 #       in some other way?
-pyqt_version = pad_version(os.environ.setdefault('PYQT_VERSION', '5.15.2'))
+pyqt_version = pad_version(os.environ.setdefault('PYQT_VERSION', '5.15.4'))
 qt_version = pad_version(os.environ.setdefault('QT_VERSION', '5.15.2'))
 qt_major_version = qt_version.partition('.')[0]
 
