@@ -363,7 +363,7 @@ class Configuration:
         if platform == 'linux':
             qt_compiler = 'gcc_64'
             qt_architecture = 'gcc_64'
-        elif platform == 'macos':
+        elif platform == 'darwin':
             qt_compiler = 'clang_64'
             qt_architecture = 'clang_64'
         elif platform == 'win32':
