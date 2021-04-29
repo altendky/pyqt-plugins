@@ -1,6 +1,7 @@
 import os
 import pathlib
 import subprocess
+import sys
 import time
 
 import pytest
@@ -79,8 +80,13 @@ def test_designer_creates_test_widget(tmp_path, environment):
 
     pyqt5_plugins.utilities.print_environment_variables(environment, *vars_to_print)
 
+    application_path = qt5_tools.application_path('designer')
+    command = [fspath(application_path)]
+    if sys.platform == 'darwin' and application_path.suffix == '.app':
+        command.insert(0, 'open')
+
     contents = run_for_file(
-        [fspath(qt5_tools.application_path('designer'))],
+        command,
         env=environment,
         file_path=file_path,
     )
