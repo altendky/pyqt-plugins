@@ -81,10 +81,10 @@ jobs:
               name: x32
             os:
               name: Linux
-           - bitness:
-               name: x32
-             os:
-               name: macOS
+          - bitness:
+              name: x32
+            os:
+              name: macOS
           - python:
               name: 3.9
             qt:
@@ -244,10 +244,10 @@ jobs:
               name: x32
             os:
               name: Linux
-           - bitness:
-               name: x32
-             os:
-               name: macOS
+          - bitness:
+              name: x32
+            os:
+              name: macOS
           - python:
               name: 3.9
             qt:
