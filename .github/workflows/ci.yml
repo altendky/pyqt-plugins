@@ -20,17 +20,17 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Linux
-            runs-on: ubuntu-latest
-            python_platform: linux
-            container: docker://python:{0}-buster
+#          - name: Linux
+#            runs-on: ubuntu-latest
+#            python_platform: linux
+#            container: docker://python:{0}-buster
           - name: macOS
             runs-on: macos-latest
             python_platform: darwin
-          - name: Windows
-            runs-on: windows-latest
-            python_platform: win32
-            vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
+#          - name: Windows
+#            runs-on: windows-latest
+#            python_platform: win32
+#            vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
         python:
           - name: 3.5
             tox: py35
