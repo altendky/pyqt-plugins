@@ -84,7 +84,7 @@ def test_designer_creates_test_widget(tmp_path, environment):
     application_path = qt5_tools.application_path('designer')
     command = [fspath(application_path)]
     if sys.platform == 'darwin' and application_path.suffix == '.app':
-        command.insert(0, 'open')
+        command = ['open', '-n', '-W', *command]
 
     contents = run_for_file(
         command,
