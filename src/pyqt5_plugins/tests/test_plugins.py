@@ -48,7 +48,7 @@ def run_for_file(
         time.sleep(1)
 
         if process.poll() is not None:
-            raise Exception(f'process ended with return code: {process.returncode}')
+            raise Exception('process ended with return code: {}'.format(process.returncode))
 
         if file_path.exists():
             break
