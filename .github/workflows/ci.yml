@@ -116,6 +116,7 @@ jobs:
     steps:
       - name: Explore
         run: |
+          find /Users/runner/hostedtoolcache/Python -iname '*.dylib'
           brew update --preinstall
           brew install findutils
           sudo gupdatedb
