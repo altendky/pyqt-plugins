@@ -40,6 +40,7 @@ def run_for_file(
         file_write_time_allowance=5,
         **kwargs
 ):
+    print('Launching: {}'.format(args[0]))
     process = subprocess.Popen(*args, **kwargs)
 
     deadline = time.monotonic() + file_exists_timeout
