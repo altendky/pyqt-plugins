@@ -712,15 +712,34 @@ def build(configuration: Configuration):
                 destinations.package,
             ) / qml_plugin.name,
         ))
-    # elif configuration.platform == 'darwin':
-    #     package_plugins = destinations.qt / 'plugins'
-    #     package_plugins_designer = package_plugins / 'designer'
-    #
-    #     # designer_plugin_path = build_path / 'designer' / 'libpyqt5.so'
-    #     # shutil.copy(
-    #     #     designer_plugin_path,
-    #     #     package_plugins_designer,
-    #     # )
+    elif configuration.platform == 'darwin':
+        designer_plugin_path = build_path / 'designer' / 'libpyqt5.dylib'
+
+        package_plugins = destinations.qt / 'plugins'
+        package_plugins_designer = (
+            package_plugins / 'designer' / designer_plugin_path.name
+        )
+
+        all_copy_actions[destinations.qt].add(FileCopyAction(
+            source=designer_plugin_path,
+            destination=package_plugins_designer.relative_to(destinations.qt),
+        ))
+
+        qml_plugin = (
+            build_path / 'qmlscene' / 'libpyqt5qmlplugin.dylib'
+        )
+
+        all_copy_actions[destinations.qt].add(FileCopyAction(
+            source=qml_plugin,
+            destination=package_plugins / qml_plugin.name,
+        ))
+
+        all_copy_actions[destinations.package].add(FileCopyAction(
+            source=qml_plugin,
+            destination=destinations.examples.relative_to(
+                destinations.package,
+            ) / qml_plugin.name,
+        ))
 
     checkpoint('Execute Copy Actions')
     for reference, actions in sorted(all_copy_actions.items()):
