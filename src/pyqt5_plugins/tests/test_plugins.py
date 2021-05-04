@@ -56,7 +56,7 @@ def run_for_file(
 
         if time.monotonic() > deadline:
             raise Exception(
-                'file not written with {} seconds'.format(file_exists_timeout),
+                'file not written within {} seconds'.format(file_exists_timeout),
             )
 
     time.sleep(file_write_time_allowance)
@@ -82,9 +82,13 @@ def test_designer_creates_test_widget(tmp_path, environment):
     pyqt5_plugins.utilities.print_environment_variables(environment, *vars_to_print)
 
     application_path = qt5_tools.application_path('designer')
-    command = [fspath(application_path)]
     if sys.platform == 'darwin' and application_path.suffix == '.app':
-        command = ['open', '-n', '-W', *command]
+        # TODO: this totally doesn't belong here...  in qt-tools maybe?
+        # command = ['open', '-n', '-W', *command]
+        inner = application_path.joinpath('Contents', 'MacOS', application_path.stem)
+        command = [fspath(inner)]
+    else:
+        command = [fspath(application_path)]
 
     contents = run_for_file(
         command,
