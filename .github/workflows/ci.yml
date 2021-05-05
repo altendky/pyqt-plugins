@@ -122,13 +122,6 @@ jobs:
       PYQT_VERSION: ${{ matrix.qt.pyqt_version }}
 
     steps:
-      - name: Explore
-        run: |
-          find /Users/runner/hostedtoolcache/Python -iname '*.dylib'
-          brew update --preinstall
-          brew install findutils
-          sudo gupdatedb
-          locate libpython{{ matrix.python.name }}m.dylib || true
       - name: Checkout
         uses: actions/checkout@v1
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
