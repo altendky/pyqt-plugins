@@ -109,6 +109,14 @@ jobs:
               name: 3.5
             qt:
               pyqt_version: 5.15.4
+          - os:
+              name: macOS
+            qt:
+              pyqt_version: 5.14.0
+          - os:
+              name: macOS
+            qt:
+              pyqt_version: 5.14.1
     env:
       QT_VERSION: ${{ matrix.qt.qt_version }}
       PYQT_VERSION: ${{ matrix.qt.pyqt_version }}
