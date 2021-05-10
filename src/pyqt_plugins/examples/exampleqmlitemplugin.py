@@ -4,11 +4,33 @@ sys.stderr.flush()
 import traceback
 sys.stderr.write('exampleqmlitemplugin.py debug: : just imported traceback\n')
 sys.stderr.flush()
-from PyQt5 import QtQml
+
+# TODO: CAMPid 0970432108721340872130742130870874321
+import importlib
+import pkg_resources
+
+major = int(pkg_resources.get_distribution(__name__.partition('.')[0]).version.partition(".")[0])
+
+
+def import_it(*segments):
+    m = {
+        "pyqt_tools": "pyqt{major}_tools".format(major=major),
+        "pyqt_plugins": "pyqt{major}_plugins".format(major=major),
+        "qt_tools": "qt{major}_tools".format(major=major),
+        "qt_applications": "qt{major}_applications".format(major=major),
+        "PyQt": "PyQt{major}".format(major=major),
+    }
+
+    majored = [m[segments[0]], *segments[1:]]
+    return importlib.import_module(".".join(majored))
+
+
+QtQml = import_it("PyQt", "QtQml")
 sys.stderr.write('exampleqmlitemplugin.py debug: : just imported QtQml\n')
 sys.stderr.flush()
 
-import pyqt5_plugins.examples.exampleqmlitem
+pyqt_plugins = import_it("pyqt_plugins")
+import_it("pyqt_plugins", "examples", "exampleqmlitem")
 sys.stderr.write('exampleqmlitemplugin.py debug: : just imported pyqt5_plugins.examples.exampleqmlitem\n')
 sys.stderr.flush()
 
@@ -19,7 +41,7 @@ class ExampleQmlItemPlugin(QtQml.QQmlExtensionPlugin):
         sys.stderr.flush()
         try:
             QtQml.qmlRegisterType(
-                pyqt5_plugins.examples.exampleqmlitem.ExampleQmlItem,
+                pyqt_plugins.examples.exampleqmlitem.ExampleQmlItem,
                 'examples',
                 1,
                 0,
