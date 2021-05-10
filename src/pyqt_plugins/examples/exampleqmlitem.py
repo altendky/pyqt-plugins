@@ -1,8 +1,10 @@
 import os
 import pathlib
 
-from PyQt5 import QtCore
-from PyQt5 import QtQuick
+from .. import import_it
+
+QtCore = import_it("PyQt", "QtCore")
+QtQuick = import_it("PyQt", "QtQuick")
 
 test_path_env_var = 'PYQT5TOOLS_TEST_PATH'
 test_file_contents = b'jagular'

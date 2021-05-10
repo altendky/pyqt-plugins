@@ -348,6 +348,7 @@ class Configuration:
     qt_architecture = attr.ib()
     qt_compiler = attr.ib()
     pyqt_version = attr.ib()
+    pyqt_major = attr.ib()
     pyqt_source_path = attr.ib()
     platform = attr.ib()
     architecture = attr.ib()
@@ -384,13 +385,16 @@ class Configuration:
                 qt_compiler += '_64'
                 qt_architecture += '_64'
 
+        pyqt_version = environment['PYQT_VERSION']
+
         return cls(
             qt_version=qt_version,
             qt_path=build_path / 'qt',
             qt_architecture=qt_architecture,
             qt_compiler=qt_compiler,
-            pyqt_version=environment['PYQT_VERSION'],
-            pyqt_source_path=build_path / 'pyqt5',
+            pyqt_version=pyqt_version,
+            pyqt_major=pyqt_version.partition('.')[0],
+            pyqt_source_path=build_path / 'pyqt',
             platform=platform,
             architecture=qt_architecture,
             build_path=build_path,
@@ -569,7 +573,7 @@ def main(package_path, build_base_path):
     # TODO: uhhh....  i'm trying to use an existing directory i thought
     build_base_path.mkdir(parents=True, exist_ok=True)
     build_path = tempfile.mkdtemp(
-        prefix='pyqt5_plugins-',
+        prefix='pyqt_plugins-',
         dir=fspath(build_base_path),
     )
     print('after ---!!!', file=sys.stderr)
@@ -628,14 +632,14 @@ def build(configuration: Configuration):
     elif configuration.platform == 'darwin':
         extras['lib_path'] = qt_paths.lib
 
-    checkpoint('Download PyQt5')
-    pyqt5_sdist_path = save_sdist(
-        project='PyQt5',
+    checkpoint('Download PyQt')
+    pyqt_sdist_path = save_sdist(
+        project='PyQt{}'.format(configuration.pyqt_major),
         version=configuration.pyqt_version,
         directory=configuration.download_path,
     )
 
-    with tarfile.open(fspath(pyqt5_sdist_path)) as tar_file:
+    with tarfile.open(fspath(pyqt_sdist_path)) as tar_file:
         for member in tar_file.getmembers():
             member.name = pathlib.Path(*pathlib.Path(member.name).parts[1:])
             member.name = fspath(member.name)
@@ -644,21 +648,22 @@ def build(configuration: Configuration):
                 path=fspath(configuration.pyqt_source_path),
             )
 
-    checkpoint('Patch PyQt5')
+    checkpoint('Patch PyQt')
     patch_pyqt(configuration, qt_paths)
 
-    checkpoint('Build PyQt5')
+    checkpoint('Build PyQt')
     build_path = build_pyqt(configuration, qt_paths)
 
-    checkpoint('Build PyQt5 Plugin Copy Actions')
+    checkpoint('Build PyQt Plugin Copy Actions')
     all_copy_actions = {
         destinations.qt: set(),
         destinations.package: set(),
     }
 
     if configuration.platform == 'win32':
+        designer_dll_name = 'pyqt{}.dll'.format(configuration.pyqt_major)
         designer_plugin_path = (
-            build_path / 'designer' / 'release' / 'pyqt5.dll'
+            build_path / 'designer' / 'release' / designer_dll_name
         )
 
         package_plugins = destinations.qt / 'plugins'
@@ -671,7 +676,9 @@ def build(configuration: Configuration):
             destination=package_plugins_designer.relative_to(destinations.qt),
         ))
 
-        qml_plugin = build_path / 'qmlscene' / 'release' / 'pyqt5qmlplugin.dll'
+        qml_dll_name = 'pyqt{}qmlplugin.dll'.format(configuration.pyqt_major)
+
+        qml_plugin = build_path / 'qmlscene' / 'release' / qml_dll_name
 
         all_copy_actions[destinations.qt].add(FileCopyAction(
             source=qml_plugin,
@@ -685,7 +692,8 @@ def build(configuration: Configuration):
             ) / qml_plugin.name,
         ))
     elif configuration.platform == 'linux':
-        designer_plugin_path = build_path / 'designer' / 'libpyqt5.so'
+        designer_so_name = 'libpyqt{}.so'.format(configuration.pyqt_major)
+        designer_plugin_path = build_path / 'designer' / designer_so_name
 
         package_plugins = destinations.qt / 'plugins'
         package_plugins_designer = (
@@ -697,8 +705,9 @@ def build(configuration: Configuration):
             destination=package_plugins_designer.relative_to(destinations.qt),
         ))
 
+        qml_so_name = 'libpyqt{}qmlplugin.so'.format(configuration.pyqt_major)
         qml_plugin = (
-            build_path / 'qmlscene' / 'libpyqt5qmlplugin.so'
+            build_path / 'qmlscene' / qml_so_name
         )
 
         all_copy_actions[destinations.qt].add(FileCopyAction(

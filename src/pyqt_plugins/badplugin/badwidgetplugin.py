@@ -1,4 +1,6 @@
-from PyQt5 import QtDesigner
+from .. import import_it
+
+QtDesigner = import_it("PyQt", "QtDesigner")
 
 
 class RedPlugin(QtDesigner.QPyDesignerCustomWidgetPlugin):

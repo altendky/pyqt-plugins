@@ -1,4 +1,6 @@
-from PyQt5 import QtWidgets
+from . import import_it
+
+QtWidgets = import_it("PyQt", "QtWidgets")
 
 
 class ExampleButton(QtWidgets.QPushButton):
