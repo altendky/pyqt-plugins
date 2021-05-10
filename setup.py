@@ -35,7 +35,7 @@ qt_major_version = qt_version.partition('.')[0]
 pyqt_plugins_wrapper_version = versioneer.get_versions()['version']
 pyqt_plugins_version = '{}.{}'.format(
     pyqt_version,
-    pyqt5_plugins_wrapper_version,
+    pyqt_plugins_wrapper_version,
 )
 
 # Inclusive of the lower bound and exclusive of the upper
