@@ -101,7 +101,7 @@ setuptools.setup(
     ],
     cmdclass={'build_py': build.BuildPy},
     distclass=Dist,
-    packages=[package.replace('qt_applications', import_name) for package in setuptools.find_packages('src')],
+    packages=[package.replace('pyqt_plugins', import_name) for package in setuptools.find_packages('src')],
     package_dir={import_name: 'src/pyqt_plugins'},
     version=pyqt_plugins_version,
     include_package_data=True,
