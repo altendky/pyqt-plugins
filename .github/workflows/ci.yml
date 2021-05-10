@@ -85,10 +85,10 @@ jobs:
             pyqt_version: 5.15.4
             qt_version: 5.15.2
             major: 5
-          - name: 6.0.0
-            pyqt_version: 6.0.0
-            qt_version: 6.0.0
-            major: 6
+#          - name: 6.0.0
+#            pyqt_version: 6.0.0
+#            qt_version: 6.0.0
+#            major: 6
           - name: 6.0.1
             pyqt_version: 6.0.1
             qt_version: 6.0.1
@@ -96,6 +96,10 @@ jobs:
           - name: 6.0.2
             pyqt_version: 6.0.2
             qt_version: 6.0.2
+            major: 6
+          - name: 6.0.3
+            pyqt_version: 6.0.3
+            qt_version: 6.0.3
             major: 6
         bitness:
           - name: x32
@@ -286,10 +290,10 @@ jobs:
             pyqt_version: 5.15.4
             qt_version: 5.15.2
             major: 5
-          - name: 6.0.0
-            pyqt_version: 6.0.0
-            qt_version: 6.0.0
-            major: 6
+#          - name: 6.0.0
+#            pyqt_version: 6.0.0
+#            qt_version: 6.0.0
+#            major: 6
           - name: 6.0.1
             pyqt_version: 6.0.1
             qt_version: 6.0.1
@@ -297,6 +301,10 @@ jobs:
           - name: 6.0.2
             pyqt_version: 6.0.2
             qt_version: 6.0.2
+            major: 6
+          - name: 6.0.3
+            pyqt_version: 6.0.3
+            qt_version: 6.0.3
             major: 6
         bitness:
           - name: x32
