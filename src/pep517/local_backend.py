@@ -64,7 +64,7 @@ def to_list(*dicts):
 
 def get_requires_for_build_wheel(config_settings=None):
     # TODO: get this in via config_settings maybe
-    version = tuple(int(v) for v in os.environ.get('PYQT_VERSION', '5.15.1').split('.'))
+    version = tuple(int(v) for v in os.environ.get('PYQT_VERSION', '6.0.2').split('.'))
 
     dicts = [
         requirements,
