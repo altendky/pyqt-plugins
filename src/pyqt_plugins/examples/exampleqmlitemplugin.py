@@ -9,20 +9,40 @@ sys.stderr.flush()
 import importlib
 import pkg_resources
 
-major = int(pkg_resources.get_distribution(__name__.partition('.')[0]).version.partition(".")[0])
+major = None
 
 
 def import_it(*segments):
-    m = {
-        "pyqt_tools": "pyqt{major}_tools".format(major=major),
-        "pyqt_plugins": "pyqt{major}_plugins".format(major=major),
-        "qt_tools": "qt{major}_tools".format(major=major),
-        "qt_applications": "qt{major}_applications".format(major=major),
-        "PyQt": "PyQt{major}".format(major=major),
-    }
+    global major
 
-    majored = [m[segments[0]], *segments[1:]]
-    return importlib.import_module(".".join(majored))
+    if major is None:
+        options = [5, 6]
+    else:
+        options = [major]
+
+    error = None
+    for major in options:
+        # TODO: this is not great but the plugin gets imported directly rather
+        #       than as part of the module so...  could add some code here on
+        #       build or something.  but yeah, all kind of a mess.  require an
+        #       env var be set, etc.
+        try:
+            m = {
+                "pyqt_tools": "pyqt{major}_tools".format(major=major),
+                "pyqt_plugins": "pyqt{major}_plugins".format(major=major),
+                "qt_tools": "qt{major}_tools".format(major=major),
+                "qt_applications": "qt{major}_applications".format(major=major),
+                "PyQt": "PyQt{major}".format(major=major),
+            }
+
+            majored = [m[segments[0]], *segments[1:]]
+            return importlib.import_module(".".join(majored))
+        except ModuleNotFoundError as e:
+            if error is None:
+                error = e
+                continue
+            else:
+                raise e from error
 
 
 QtQml = import_it("PyQt", "QtQml")
@@ -31,7 +51,7 @@ sys.stderr.flush()
 
 pyqt_plugins = import_it("pyqt_plugins")
 import_it("pyqt_plugins", "examples", "exampleqmlitem")
-sys.stderr.write('exampleqmlitemplugin.py debug: : just imported pyqt5_plugins.examples.exampleqmlitem\n')
+sys.stderr.write('exampleqmlitemplugin.py debug: : just imported pyqt{}_plugins.examples.exampleqmlitem\n'.format(major))
 sys.stderr.flush()
 
 

@@ -1,5 +1,6 @@
 import os
 import pathlib
+import pkg_resources
 import sys
 import sysconfig
 
@@ -7,13 +8,12 @@ from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
 
+major = int(pkg_resources.get_distribution(__name__.partition('.')[0]).version.partition(".")[0])
+
 
 # TODO: CAMPid 0970432108721340872130742130870874321
 def import_it(*segments):
     import importlib
-    import pkg_resources
-
-    major = int(pkg_resources.get_distribution(__name__.partition('.')[0]).version.partition(".")[0])
 
     m = {
         "pyqt_tools": "pyqt{major}_tools".format(major=major),
