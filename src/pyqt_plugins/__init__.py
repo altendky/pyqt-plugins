@@ -46,7 +46,9 @@ if sys.platform == 'win32':
 plugins = root.joinpath('Qt', 'plugins')
 
 pyqt_root = pathlib.Path(PyQt.__file__).resolve().parent
-if pyqt_version >= (5, 15, 4):
+if pyqt_version >= (6,):
+    pyqt_qt_root = pyqt_root.joinpath('Qt6')
+elif pyqt_version >= (5, 15, 4):
     pyqt_qt_root = pyqt_root.joinpath('Qt5')
 else:
     pyqt_qt_root = pyqt_root.joinpath('Qt')

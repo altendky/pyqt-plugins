@@ -9,7 +9,12 @@ import pytest
 import importlib
 import pkg_resources
 
-major = int(pkg_resources.get_distribution(__name__.partition('.')[0]).version.partition(".")[0])
+string_version = pkg_resources.get_distribution(__name__.partition('.')[0]).version
+version = tuple(
+    int(segment)
+    for segment in string_version.split('.')[:3]
+)
+major = version[0]
 
 
 def import_it(*segments):
@@ -111,6 +116,11 @@ def test_designer_creates_test_widget(tmp_path, environment):
 qml2_import_paths = (pyqt_plugins.utilities.fspath(pyqt_plugins.root),)
 
 
+@pytest.mark.xfail(
+    (6,) <= version,
+    reason="QML not yet supported for {}".format(string_version),
+    strict=True,
+)
 def test_qmlscene_paints_test_item(tmp_path, environment):
     file_path = tmp_path/'eeyore'
     environment[pyqt_plugins.examples.exampleqmlitem.test_path_env_var] = fspath(file_path)
@@ -133,6 +143,11 @@ def test_qmlscene_paints_test_item(tmp_path, environment):
     assert contents == pyqt_plugins.examples.exampleqmlitem.test_file_contents
 
 
+@pytest.mark.xfail(
+    (6,) <= version,
+    reason="QML not yet supported for {}".format(string_version),
+    strict=True,
+)
 def test_qmltestrunner_paints_test_item(tmp_path, environment):
     file_path = tmp_path/'piglet'
     environment[pyqt_plugins.examples.exampleqmlitem.test_path_env_var] = fspath(file_path)
