@@ -116,6 +116,7 @@ def test_designer_creates_test_widget(tmp_path, environment):
 qml2_import_paths = (pyqt_plugins.utilities.fspath(pyqt_plugins.root),)
 
 
+# https://www.riverbankcomputing.com/pipermail/pyqt/2021-May/043916.html
 @pytest.mark.skipif(
     (6,) <= version <= (6, 1, 0),
     reason="QML not supported for v6 through v6.1.0: {}".format(string_version),
@@ -142,6 +143,7 @@ def test_qmlscene_paints_test_item(tmp_path, environment):
     assert contents == pyqt_plugins.examples.exampleqmlitem.test_file_contents
 
 
+# https://www.riverbankcomputing.com/pipermail/pyqt/2021-May/043916.html
 @pytest.mark.skipif(
     (6,) <= version <= (6, 1, 0),
     reason="QML not supported for v6 through v6.1.0: {}".format(string_version),
