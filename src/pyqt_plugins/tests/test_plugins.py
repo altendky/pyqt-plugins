@@ -116,10 +116,9 @@ def test_designer_creates_test_widget(tmp_path, environment):
 qml2_import_paths = (pyqt_plugins.utilities.fspath(pyqt_plugins.root),)
 
 
-@pytest.mark.xfail(
-    (6,) <= version,
-    reason="QML not yet supported for {}".format(string_version),
-    strict=True,
+@pytest.mark.skipif(
+    (6,) <= version <= (6, 1, 0),
+    reason="QML not supported for v6 through v6.1.0: {}".format(string_version),
 )
 def test_qmlscene_paints_test_item(tmp_path, environment):
     file_path = tmp_path/'eeyore'
@@ -143,10 +142,9 @@ def test_qmlscene_paints_test_item(tmp_path, environment):
     assert contents == pyqt_plugins.examples.exampleqmlitem.test_file_contents
 
 
-@pytest.mark.xfail(
-    (6,) <= version,
-    reason="QML not yet supported for {}".format(string_version),
-    strict=True,
+@pytest.mark.skipif(
+    (6,) <= version <= (6, 1, 0),
+    reason="QML not supported for v6 through v6.1.0: {}".format(string_version),
 )
 def test_qmltestrunner_paints_test_item(tmp_path, environment):
     file_path = tmp_path/'piglet'
