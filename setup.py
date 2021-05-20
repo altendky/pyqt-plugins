@@ -39,7 +39,10 @@ pyqt5_plugins_version = '{}.{}'.format(
 )
 
 # Inclusive of the lower bound and exclusive of the upper
-qt_tools_wrapper_range = ['1', '2']
+if sys.platform == 'darwin':
+    qt_tools_wrapper_range = ['1.1', '2']
+else:
+    qt_tools_wrapper_range = ['1', '2']
 
 # Must be False for release.  PyPI won't let you upload with a URL dependency.
 use_qt_tools_url = False
