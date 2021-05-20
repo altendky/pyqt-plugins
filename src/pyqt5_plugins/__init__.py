@@ -39,7 +39,7 @@ def create_environment(reference=None):
         reference = dict(os.environ)
     environment = qt5_tools.create_environment(reference=reference)
 
-    if sys.platform == 'linux':
+    if sys.platform in {'linux', 'darwin'}:
         environment.update(pyqt5_plugins.utilities.add_to_env_var_path_list(
             env=environment,
             name='LD_LIBRARY_PATH',
