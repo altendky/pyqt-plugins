@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - e*
     tags:
       - v*
   pull_request:
@@ -24,13 +25,13 @@ jobs:
             runs-on: ubuntu-latest
             python_platform: linux
             container: docker://python:{0}-buster
+          - name: macOS
+            runs-on: macos-latest
+            python_platform: darwin
           - name: Windows
             runs-on: windows-latest
             python_platform: win32
             vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
-#          - name: macOS
-#            runs-on: macos-latest
-#            python_platform: darwin
         python:
           - name: 3.5
             tox: py35
@@ -117,10 +118,10 @@ jobs:
               name: x32
             os:
               name: Linux
-#           - bitness:
-#               name: x32
-#             os:
-#               name: macOS
+          - bitness:
+              name: x32
+            os:
+              name: macOS
           - python:
               name: 3.9
             qt:
@@ -145,6 +146,14 @@ jobs:
               name: 3.5
             qt:
               pyqt_version: 5.15.4
+          - os:
+              name: macOS
+            qt:
+              pyqt_version: 5.14.0
+          - os:
+              name: macOS
+            qt:
+              pyqt_version: 5.14.1
           - python:
               name: 3.5
             qt:
@@ -160,8 +169,9 @@ jobs:
       PYQT_VERSION: ${{ matrix.qt.pyqt_version }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
         uses: actions/setup-python@v2
@@ -181,11 +191,11 @@ jobs:
           pip list
           pip freeze --all
           python -c "import sysconfig; print('Py_ENABLE_SHARED -> {}'.format(sysconfig.get_config_var('Py_ENABLE_SHARED')))"
-      - name: Install Linux build dependencies
+      - name: Install Linux dependencies
         if: matrix.os.python_platform == 'linux'
         run: |
           apt-get update --yes
-          apt-get install --yes libgl1-mesa-dev libdbus-1-3 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
+          apt-get install --yes libgl1-mesa-dev libdbus-1-3 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 xvfb x11-utils
       - uses: altendky/QTBUG-88688-libxcb-util@v3
       - name: Set up MSVC
         uses: ilammy/msvc-dev-cmd@v1
@@ -219,207 +229,12 @@ jobs:
         with:
           name: all_wheels
           path: dist/
-  test:
-    name: Test ${{ matrix.os.name }} ${{ matrix.python.name }}-${{ matrix.bitness.name }} ${{ matrix.qt.name }}
-    runs-on: ${{ matrix.os.runs-on }}
-    container: ${{ format(matrix.os.container, matrix.python.docker) }}
-    needs:
-      - build
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - name: Linux
-            runs-on: ubuntu-latest
-            python_platform: linux
-            container: docker://python:{0}-buster
-          - name: Windows
-            runs-on: windows-latest
-            python_platform: win32
-            vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
-#          - name: macOS
-#            runs-on: macos-latest
-#            python_platform: darwin
-        python:
-          - name: 3.5
-            tox: py35
-            action: 3.5
-            docker: 3.5
-          - name: 3.6
-            tox: py36
-            action: 3.6
-            docker: 3.6
-          - name: 3.7
-            tox: py37
-            action: 3.7
-            docker: 3.7
-          - name: 3.8
-            tox: py38
-            action: 3.8
-            docker: 3.8
-          - name: 3.9
-            tox: py39
-            action: 3.9
-            docker: 3.9
-        qt:
-          - name: 5.14.0
-            pyqt_version: 5.14.0
-            qt_version: 5.14.0
-            major: 5
-            tox: qt5
-          - name: 5.14.1
-            pyqt_version: 5.14.1
-            qt_version: 5.14.1
-            major: 5
-            tox: qt5
-          - name: 5.14.2
-            pyqt_version: 5.14.2
-            qt_version: 5.14.2
-            major: 5
-            tox: qt5
-          - name: 5.15.0
-            pyqt_version: 5.15.0
-            qt_version: 5.15.0
-            major: 5
-            tox: qt5
-          - name: 5.15.1
-            pyqt_version: 5.15.1
-            qt_version: 5.15.1
-            major: 5
-            tox: qt5
-          - name: 5.15.2
-            pyqt_version: 5.15.2
-            qt_version: 5.15.2
-            major: 5
-            tox: qt5
-          - name: 5.15.3
-            pyqt_version: 5.15.3
-            qt_version: 5.15.2
-            major: 5
-            tox: qt5
-          - name: 5.15.4
-            pyqt_version: 5.15.4
-            qt_version: 5.15.2
-            major: 5
-            tox: qt5
-#          - name: 6.0.0
-#            pyqt_version: 6.0.0
-#            qt_version: 6.0.0
-#            major: 6
-#            tox: qt6
-          - name: 6.0.1
-            pyqt_version: 6.0.1
-            qt_version: 6.0.1
-            major: 6
-            tox: qt6
-          - name: 6.0.2
-            pyqt_version: 6.0.2
-            qt_version: 6.0.2
-            major: 6
-            tox: qt6
-          - name: 6.0.3
-            pyqt_version: 6.0.3
-            qt_version: 6.0.3
-            major: 6
-            tox: qt6
-# no PyQt6==6.0.4
-#          - name: 6.0.4
-#            pyqt_version: 6.0.4
-#            qt_version: 6.0.4
-#            major: 6
-#            tox: qt6
-          - name: 6.1.0
-            pyqt_version: 6.1.0
-            qt_version: 6.1.0
-            major: 6
-            tox: qt6
-        bitness:
-          - name: x32
-            action: x86
-            ilammy: x86
-          - name: x64
-            action: x64
-            ilammy: x64
-        exclude:
-          - bitness:
-              name: x32
-            os:
-              name: Linux
-#           - bitness:
-#               name: x32
-#             os:
-#               name: macOS
-          - python:
-              name: 3.9
-            qt:
-              pyqt_version: 5.14.0
-          - python:
-              name: 3.9
-            qt:
-              pyqt_version: 5.14.1
-          - python:
-              name: 3.9
-            qt:
-              pyqt_version: 5.14.2
-          - python:
-              name: 3.9
-            qt:
-              pyqt_version: 5.15.0
-          - python:
-              name: 3.5
-            qt:
-              pyqt_version: 5.15.3
-          - python:
-              name: 3.5
-            qt:
-              pyqt_version: 5.15.4
-          - python:
-              name: 3.5
-            qt:
-              major: 6
-          - bitness:
-              name: x32
-            os:
-              name: Windows
-            qt:
-              major: 6
-    env:
-      QT_VERSION: ${{ matrix.qt.qt_version }}
-      PYQT_VERSION: ${{ matrix.qt.pyqt_version }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Download
-        uses: actions/download-artifact@v1
-        with:
-          name: ${{ matrix.os.name }} ${{ matrix.python.name }}-${{ matrix.bitness.name }} ${{ matrix.qt.name }}
-          path: dist/
-      - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
-        if: matrix.os.python_platform != 'linux'
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python.action }}
-          architecture: ${{ matrix.bitness.action }}
-      - name: pip/setuptools/tox
-        run: |
-          python -m pip install --upgrade pip setuptools
-          pip install tox
-      - name: Report info
-        shell: bash
-        run: |
-          git show --quiet HEAD
-          python --version --version
-          pip --version
-          pip list
-          pip freeze --all
-          python -c "import sysconfig; print('Py_ENABLE_SHARED -> {}'.format(sysconfig.get_config_var('Py_ENABLE_SHARED')))"
       - name: Set WHEEL_PATH
         shell: python
         run: |
           import os
           import pathlib
-          
+
           fspath = getattr(os, 'fspath', str)
 
           dist = pathlib.Path.cwd() / 'dist'
@@ -428,12 +243,6 @@ jobs:
           with open(os.environ['GITHUB_ENV'], 'a') as github_env:
               github_env.write('WHEEL_PATH={}\n'.format(fspath(wheel)))
               github_env.write('WHEEL_STEM={}\n'.format(wheel.stem))
-      - name: Install Linux test dependencies
-        if: matrix.os.python_platform == 'linux'
-        run: |
-          apt-get update --yes
-          apt-get install --yes libgl1-mesa-dev libdbus-1-3 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 xvfb x11-utils
-      - uses: altendky/QTBUG-88688-libxcb-util@v3
       - name: Test
         run: |
           tox -e ${{ matrix.python.tox }}-${{ matrix.qt.tox }} --installpkg ${{ env['WHEEL_PATH'] }}
@@ -442,10 +251,11 @@ jobs:
     runs-on: ubuntu-latest
     container: docker://python:3.8-buster
     needs:
-      - test
+      - build
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Download all wheels
         uses: actions/download-artifact@v1
         with:
@@ -465,7 +275,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build
-      - test
       - maybe_publish
     steps:
       - name: This

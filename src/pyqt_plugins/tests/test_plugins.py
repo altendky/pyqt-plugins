@@ -64,6 +64,7 @@ def run_for_file(
         file_write_time_allowance=5,
         **kwargs
 ):
+    print('Launching: {}'.format(args[0]))
     process = subprocess.Popen(*args, **kwargs)
 
     deadline = time.monotonic() + file_exists_timeout
@@ -72,14 +73,14 @@ def run_for_file(
         time.sleep(1)
 
         if process.poll() is not None:
-            raise Exception('process ended')
+            raise Exception('process ended with return code: {}'.format(process.returncode))
 
         if file_path.exists():
             break
 
         if time.monotonic() > deadline:
             raise Exception(
-                'file not written with {} seconds'.format(file_exists_timeout),
+                'file not written within {} seconds'.format(file_exists_timeout),
             )
 
     time.sleep(file_write_time_allowance)
@@ -104,8 +105,13 @@ def test_designer_creates_test_widget(tmp_path, environment):
 
     pyqt_plugins.utilities.print_environment_variables(environment, *vars_to_print)
 
+    command_elements = qt_tools.create_command_elements(
+        name='designer',
+        sys_platform=sys.platform,
+    )
+
     contents = run_for_file(
-        [fspath(qt_tools.application_path('designer'))],
+        command_elements,
         env=environment,
         file_path=file_path,
     )
@@ -131,9 +137,14 @@ def test_qmlscene_paints_test_item(tmp_path, environment):
 
     pyqt_plugins.utilities.print_environment_variables(environment, *vars_to_print)
 
+    command_elements = qt_tools.create_command_elements(
+        name='qmlscene',
+        sys_platform=sys.platform,
+    )
+
     contents = run_for_file(
         [
-            fspath(qt_tools.application_path('qmlscene')),
+            *command_elements,
             fspath(qml_example_path),
         ],
         env=environment,
@@ -158,9 +169,14 @@ def test_qmltestrunner_paints_test_item(tmp_path, environment):
 
     pyqt_plugins.utilities.print_environment_variables(environment, *vars_to_print)
 
+    command_elements = qt_tools.create_command_elements(
+        name='qmltestrunner',
+        sys_platform=sys.platform,
+    )
+
     subprocess.run(
         [
-            fspath(qt_tools.application_path('qmltestrunner')),
+            *command_elements,
             '-input',
             qml_test_path,
         ],
