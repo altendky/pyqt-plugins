@@ -62,7 +62,7 @@ def create_environment(reference=None):
     environment = qt_tools.create_environment(reference=reference)
 
     if sys.platform in {'linux', 'darwin'}:
-        environment.update(pyqt5_plugins.utilities.add_to_env_var_path_list(
+        environment.update(pyqt_plugins.utilities.add_to_env_var_path_list(
             env=environment,
             name='LD_LIBRARY_PATH',
             before=[],
