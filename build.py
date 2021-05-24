@@ -722,7 +722,7 @@ def build(configuration: Configuration):
             ) / qml_plugin.name,
         ))
     elif configuration.platform == 'darwin':
-        designer_plugin_path = build_path / 'designer' / 'libpyqt5.dylib'
+        designer_plugin_path = build_path / 'designer' / 'libpyqt{}.dylib'.format(configuration.pyqt_major)
 
         package_plugins = destinations.qt / 'plugins'
         package_plugins_designer = (
@@ -735,7 +735,7 @@ def build(configuration: Configuration):
         ))
 
         qml_plugin = (
-            build_path / 'qmlscene' / 'libpyqt5qmlplugin.dylib'
+            build_path / 'qmlscene' / 'libpyqt{}qmlplugin.dylib'.format(configuration.pyqt_major)
         )
 
         all_copy_actions[destinations.qt].add(FileCopyAction(
