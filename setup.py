@@ -46,7 +46,7 @@ qt_tools_wrapper_range = ['1.2', '2']
 use_qt_tools_url = False
 
 if use_qt_tools_url:
-    qt_tools_url = ' @ git+https://github.com/altendky/qt-tools@add_qt6'
+    qt_tools_url = ' @ git+https://github.com/altendky/qt-tools@main'
     qt_tools_version_specifier = ''
 else:
     qt_tools_url = ''
