@@ -29,21 +29,18 @@ def pad_version(v, segment_count=3):
 
 # TODO: really doesn't seem quite proper here and probably should come
 #       in some other way?
-pyqt_version = pad_version(os.environ.setdefault('PYQT_VERSION', '5.15.4'))
-qt_version = pad_version(os.environ.setdefault('QT_VERSION', '5.15.2'))
+pyqt_version = pad_version(os.environ.setdefault('PYQT_VERSION', '6.1.0'))
+qt_version = pad_version(os.environ.setdefault('QT_VERSION', '6.1.0'))
 qt_major_version = qt_version.partition('.')[0]
 
-pyqt5_plugins_wrapper_version = versioneer.get_versions()['version']
-pyqt5_plugins_version = '{}.{}'.format(
+pyqt_plugins_wrapper_version = versioneer.get_versions()['version']
+pyqt_plugins_version = '{}.{}'.format(
     pyqt_version,
-    pyqt5_plugins_wrapper_version,
+    pyqt_plugins_wrapper_version,
 )
 
 # Inclusive of the lower bound and exclusive of the upper
-if sys.platform == 'darwin':
-    qt_tools_wrapper_range = ['1.1', '2']
-else:
-    qt_tools_wrapper_range = ['1', '2']
+qt_tools_wrapper_range = ['1.2', '2']
 
 # Must be False for release.  PyPI won't let you upload with a URL dependency.
 use_qt_tools_url = False
@@ -72,12 +69,16 @@ class Dist(setuptools.Distribution):
         return True
 
 
+distribution_name = "pyqt{}-plugins".format(qt_major_version)
+import_name = distribution_name.replace('-', '_')
+
+
 setuptools.setup(
-    name="pyqt5_plugins",
+    name=distribution_name,
     description="PyQt Designer and QML plugins",
     long_description=readme,
     long_description_content_type='text/x-rst',
-    url='https://github.com/altendky/pyqt5-tools',
+    url='https://github.com/altendky/pyqt-plugins',
     author="Kyle Altendorf",
     author_email='sda@fstab.net',
     license='GPLv3',
@@ -100,14 +101,14 @@ setuptools.setup(
     ],
     cmdclass={'build_py': build.BuildPy},
     distclass=Dist,
-    packages=setuptools.find_packages('src'),
-    package_dir={'': 'src'},
-    version=pyqt5_plugins_version,
+    packages=[package.replace('pyqt_plugins', import_name) for package in setuptools.find_packages('src')],
+    package_dir={import_name: 'src/pyqt_plugins'},
+    version=pyqt_plugins_version,
     include_package_data=True,
     python_requires=">=3.5",
     install_requires=[
         'click',
-        'pyqt5=={}'.format(os.environ['PYQT_VERSION']),
+        'pyqt{}=={}'.format(qt_major_version, pyqt_version),
         'qt{}-tools{}{}'.format(
             qt_major_version,
             qt_tools_version_specifier,

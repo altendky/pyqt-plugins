@@ -1,10 +1,13 @@
 import os
 import pathlib
 
-from PyQt5 import QtWidgets
+from .. import import_it
+from .. import major
+
+QtWidgets = import_it("PyQt", "QtWidgets")
 
 
-test_path_env_var = 'PYQT5TOOLS_TEST_PATH'
+test_path_env_var = 'PYQT{}TOOLS_TEST_PATH'.format(major)
 test_file_contents = b'heffalump'
 write_for_test = test_path_env_var in os.environ
 
@@ -15,7 +18,7 @@ class TestButton(QtWidgets.QPushButton):
 
         super().__init__(parent)
 
-        self.setText('pyqt5-tools Test Button')
+        self.setText('pyqt{}-tools Test Button'.format(major))
 
         if write_for_test:
             write_for_test = False

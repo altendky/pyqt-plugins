@@ -1,6 +1,26 @@
 import os
 
-import pyqt5_plugins
+# TODO: CAMPid 0970432108721340872130742130870874321
+import importlib
+import pkg_resources
+
+major = int(pkg_resources.get_distribution(__name__.partition('.')[0]).version.partition(".")[0])
+
+
+def import_it(*segments):
+    m = {
+        "pyqt_tools": "pyqt{major}_tools".format(major=major),
+        "pyqt_plugins": "pyqt{major}_plugins".format(major=major),
+        "qt_tools": "qt{major}_tools".format(major=major),
+        "qt_applications": "qt{major}_applications".format(major=major),
+        "PyQt": "PyQt{major}".format(major=major),
+    }
+
+    majored = [m[segments[0]], *segments[1:]]
+    return importlib.import_module(".".join(majored))
+
+
+pyqt_plugins = import_it("pyqt_plugins")
 
 
 fspath = getattr(os, 'fspath', str)
@@ -41,6 +61,6 @@ def mutate_qml_path(env, paths):
     env.update(add_to_env_var_path_list(
         env=env,
         name='QML2_IMPORT_PATH',
-        before=[*paths, fspath(pyqt5_plugins.pyqt5_qml_path)],
+        before=[*paths, fspath(pyqt_plugins.pyqt_qml_path)],
         after=[''],
     ))
