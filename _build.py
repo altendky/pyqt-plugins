@@ -594,6 +594,9 @@ def checkpoint(name):
 
 
 def build(configuration: Configuration):
+    qmldir_path = configuration.package_path.joinpath("examples", "qmldir")
+    qmldir_path.write_text(qmldir_path.read_text().replace("qtX", f"qt{configuration.pyqt_major}"))
+
     checkpoint('Install Qt')
     install_qt(configuration=configuration)
 
