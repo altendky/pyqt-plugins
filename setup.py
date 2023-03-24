@@ -5,7 +5,7 @@ import sys
 import setuptools
 import versioneer
 
-import build
+import _build
 
 
 fspath = getattr(os, 'fspath', str)
@@ -43,10 +43,10 @@ pyqt_plugins_version = '{}.{}'.format(
 qt_tools_wrapper_range = ['1.2', '2']
 
 # Must be False for release.  PyPI won't let you upload with a URL dependency.
-use_qt_tools_url = False
+use_qt_tools_url = True
 
 if use_qt_tools_url:
-    qt_tools_url = ' @ git+https://github.com/altendky/qt-tools@main'
+    qt_tools_url = ' @ git+https://github.com/altendky/qt-tools@maybe'
     qt_tools_version_specifier = ''
 else:
     qt_tools_url = ''
@@ -99,7 +99,7 @@ setuptools.setup(
         'Topic :: Software Development',
         'Topic :: Utilities',
     ],
-    cmdclass={'build_py': build.BuildPy},
+    cmdclass={'build_py': _build.BuildPy},
     distclass=Dist,
     packages=[package.replace('pyqt_plugins', import_name) for package in setuptools.find_packages('src')],
     package_dir={import_name: 'src/pyqt_plugins'},
@@ -108,7 +108,8 @@ setuptools.setup(
     python_requires=">=3.5",
     install_requires=[
         'click',
-        'pyqt{}=={}'.format(qt_major_version, pyqt_version),
+        'pyqt{}'.format(qt_major_version),
+        'pyqt{}-qt{}=={}'.format(qt_major_version, qt_major_version, pyqt_version),
         'qt{}-tools{}{}'.format(
             qt_major_version,
             qt_tools_version_specifier,
