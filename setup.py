@@ -108,8 +108,8 @@ setuptools.setup(
     python_requires=">=3.5",
     install_requires=[
         'click',
-        'pyqt{}'.format(qt_major_version),
-        'pyqt{}-qt{}=={}'.format(qt_major_version, qt_major_version, pyqt_version),
+        'pyqt{}=={}'.format(qt_major_version, pyqt_version),
+        'pyqt{}-qt{}=={}'.format(qt_major_version, qt_major_version, qt_version),
         'qt{}-tools{}{}'.format(
             qt_major_version,
             qt_tools_version_specifier,

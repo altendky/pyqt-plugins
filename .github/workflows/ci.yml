@@ -57,7 +57,7 @@ jobs:
             major: 5
             tox: qt5
           - name: 6.4.3
-            pyqt_version: 6.4.3
+            pyqt_version: 6.4.2
             qt_version: 6.4.3
             major: 6
             tox: qt6
