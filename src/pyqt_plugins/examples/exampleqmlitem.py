@@ -50,7 +50,7 @@ class ExampleQmlItem(QtQuick.QQuickPaintedItem):
                 f.write(test_file_contents)
 
         painter.drawText(
-            self.width() / 2,
-            self.height() / 2,
+            int(self.width() / 2),
+            int(self.height() / 2),
             'pyqt{}-tools'.format(major),
         )
