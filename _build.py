@@ -29,8 +29,8 @@ fspath = getattr(os, 'fspath', str)
 
 
 class BuildPy(setuptools.command.build_py.build_py):
-    def build_packages(self):
-        super().build_packages()
+    def build_package_data(self):
+        super().build_package_data()
 
         try:
             [package_name] = (
