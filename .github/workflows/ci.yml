@@ -97,6 +97,14 @@ jobs:
         with:
           python-version: ${{ matrix.python.action }}
           architecture: ${{ matrix.bitness.action }}
+      - name: debug
+        if: matrix.os.python_platform == 'darwin'
+        run: |
+          find /Users/runner/hostedtoolcache/Python/3.10.10/ -name libpython3.10.dylib
+      - name: debug
+        if: matrix.os.python_platform == 'darwin'
+        run: |
+          python -m sysconfig
       - name: pip/setuptools/tox
         run: |
           python -m pip install --upgrade pip setuptools wheel
@@ -163,10 +171,6 @@ jobs:
           with open(os.environ['GITHUB_ENV'], 'a') as github_env:
               github_env.write('WHEEL_PATH={}\n'.format(fspath(wheel)))
               github_env.write('WHEEL_STEM={}\n'.format(wheel.stem))
-      - name: debug
-        if: matrix.os.python_platform == 'darwin'
-        run: |
-          find /Users/runner/hostedtoolcache/Python/3.10.10/ -name libpython3.10.dylib
       - name: Test
         run: |
           tox -e ${{ matrix.python.tox }}-${{ matrix.qt.tox }} --installpkg ${{ env['WHEEL_PATH'] }}
