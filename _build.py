@@ -264,8 +264,12 @@ class QtPaths:
             version,
             compiler,
             platform_,
+            major,
     ):
-        compiler_path = base / version / compiler
+        if sys.platform == 'darwin' and major == 6:
+            compiler_path = base / version / 'macos'
+        else:
+            compiler_path = base / version / compiler
         bin_path = compiler_path / 'bin'
         lib_path = compiler_path / 'lib'
         translation_path = compiler_path / 'translations'
@@ -614,6 +618,7 @@ def build(configuration: Configuration):
         version=configuration.qt_version,
         compiler=configuration.qt_compiler,
         platform_=configuration.platform,
+        major=configuration.pyqt_major,
     )
 
     destinations = Destinations.build(package_path=configuration.package_path)
@@ -899,15 +904,15 @@ def install_qt(configuration):
         command=[
             sys.executable,
             '-m', 'aqt',
-            'install',
+            'install-qt',
             '--outputdir', configuration.qt_path.resolve(),
-            configuration.qt_version,
             {
                 'linux': 'linux',
                 'win32': 'windows',
                 'darwin': 'mac',
             }[configuration.platform],
             'desktop',
+            configuration.qt_version,
             configuration.architecture,
         ],
     )
