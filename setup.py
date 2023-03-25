@@ -105,7 +105,7 @@ setuptools.setup(
     package_dir={import_name: 'src/pyqt_plugins'},
     version=pyqt_plugins_version,
     include_package_data=True,
-    python_requires=">=3.5",
+    python_requires=">=3.8",
     install_requires=[
         'click',
         'pyqt{}=={}'.format(qt_major_version, pyqt_version),
