@@ -266,7 +266,7 @@ class QtPaths:
             platform_,
             major,
     ):
-        if sys.platform == 'darwin' and major == 6:
+        if sys.platform == 'darwin' and major == '6':
             compiler_path = base / version / 'macos'
         else:
             compiler_path = base / version / compiler
