@@ -55,17 +55,17 @@ jobs:
             action: '3.11'
             docker: '3.11'
         qt:
-          - name: 5.15.2
+          - name: 5.15.9
             pyqt_version: 5.15.9
             qt_version: 5.15.2
             major: 5
             tox: qt5
-          - name: 6.3.2
+          - name: 6.3.1
             pyqt_version: 6.3.1
             qt_version: 6.3.2
             major: 6
             tox: qt6
-          - name: 6.4.3
+          - name: 6.4.2
             pyqt_version: 6.4.2
             qt_version: 6.4.3
             major: 6
