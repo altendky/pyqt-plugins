@@ -62,9 +62,13 @@ def create_environment(reference=None):
     environment = qt_tools.create_environment(reference=reference)
 
     if sys.platform in {'linux', 'darwin'}:
+        if sys.platform == 'linux':
+            variable = 'LD_LIBRARY_PATH'
+        else:
+            variable = 'DYLD_LIBRARY_PATH'
         environment.update(pyqt_plugins.utilities.add_to_env_var_path_list(
             env=environment,
-            name='LD_LIBRARY_PATH',
+            name=variable,
             before=[],
             after=[sysconfig.get_config_var('LIBDIR')],
         ))

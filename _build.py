@@ -29,8 +29,8 @@ fspath = getattr(os, 'fspath', str)
 
 
 class BuildPy(setuptools.command.build_py.build_py):
-    def build_packages(self):
-        super().build_packages()
+    def build_package_data(self):
+        super().build_package_data()
 
         try:
             [package_name] = (
@@ -264,8 +264,12 @@ class QtPaths:
             version,
             compiler,
             platform_,
+            major,
     ):
-        compiler_path = base / version / compiler
+        if sys.platform == 'darwin' and major == '6':
+            compiler_path = base / version / 'macos'
+        else:
+            compiler_path = base / version / compiler
         bin_path = compiler_path / 'bin'
         lib_path = compiler_path / 'lib'
         translation_path = compiler_path / 'translations'
@@ -594,6 +598,9 @@ def checkpoint(name):
 
 
 def build(configuration: Configuration):
+    qmldir_path = configuration.package_path.joinpath("examples", "qmldir")
+    qmldir_path.write_text(qmldir_path.read_text().replace("qtX", f"qt{configuration.pyqt_major}"))
+
     checkpoint('Install Qt')
     install_qt(configuration=configuration)
 
@@ -611,6 +618,7 @@ def build(configuration: Configuration):
         version=configuration.qt_version,
         compiler=configuration.qt_compiler,
         platform_=configuration.platform,
+        major=configuration.pyqt_major,
     )
 
     destinations = Destinations.build(package_path=configuration.package_path)
@@ -896,15 +904,15 @@ def install_qt(configuration):
         command=[
             sys.executable,
             '-m', 'aqt',
-            'install',
+            'install-qt',
             '--outputdir', configuration.qt_path.resolve(),
-            configuration.qt_version,
             {
                 'linux': 'linux',
                 'win32': 'windows',
                 'darwin': 'mac',
             }[configuration.platform],
             'desktop',
+            configuration.qt_version,
             configuration.architecture,
         ],
     )

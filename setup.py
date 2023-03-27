@@ -5,7 +5,7 @@ import sys
 import setuptools
 import versioneer
 
-import build
+import _build
 
 
 fspath = getattr(os, 'fspath', str)
@@ -60,6 +60,16 @@ else:
 with open('README.rst') as f:
     readme = f.read()
 
+if qt_major_version == '5':
+    replacements = [
+        ["qt6", "qt5"],
+        ["Qt6", "Qt5"],
+        ["Qt6", "Qt 5"],
+        ["6.4", "5.15"],
+    ]
+    for a, b in replacements:
+        readme = readme.replace(a, b)
+
 
 class Dist(setuptools.Distribution):
     def has_ext_modules(self):
@@ -99,16 +109,17 @@ setuptools.setup(
         'Topic :: Software Development',
         'Topic :: Utilities',
     ],
-    cmdclass={'build_py': build.BuildPy},
+    cmdclass={'build_py': _build.BuildPy},
     distclass=Dist,
     packages=[package.replace('pyqt_plugins', import_name) for package in setuptools.find_packages('src')],
     package_dir={import_name: 'src/pyqt_plugins'},
     version=pyqt_plugins_version,
     include_package_data=True,
-    python_requires=">=3.5",
+    python_requires=">=3.7",
     install_requires=[
         'click',
         'pyqt{}=={}'.format(qt_major_version, pyqt_version),
+        'pyqt{}-qt{}=={}'.format(qt_major_version, qt_major_version, qt_version),
         'qt{}-tools{}{}'.format(
             qt_major_version,
             qt_tools_version_specifier,
