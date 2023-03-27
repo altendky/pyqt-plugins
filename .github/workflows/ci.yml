@@ -106,14 +106,6 @@ jobs:
         with:
           python-version: ${{ matrix.python.action }}
           architecture: ${{ matrix.bitness.action }}
-      - name: debug
-        if: matrix.os.python_platform == 'darwin'
-        run: |
-          find /Users/runner/hostedtoolcache/Python/3.10.10/ -name libpython3.10.dylib
-      - name: debug
-        if: matrix.os.python_platform == 'darwin'
-        run: |
-          python -m sysconfig
       - name: pip/setuptools/tox
         run: |
           python -m pip install --upgrade pip setuptools wheel
@@ -128,6 +120,7 @@ jobs:
           pip list
           pip freeze --all
           python -c "import sysconfig; print('Py_ENABLE_SHARED -> {}'.format(sysconfig.get_config_var('Py_ENABLE_SHARED')))"
+          python -c 'import sys; print("sys.maxsize:", sys.maxsize, sys.maxsize > 2**32)'
       - name: Install Linux dependencies
         if: matrix.os.python_platform == 'linux'
         run: |
