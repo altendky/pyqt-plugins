@@ -100,6 +100,7 @@ jobs:
     env:
       QT_VERSION: ${{ matrix.qt.qt_version }}
       PYQT_VERSION: ${{ matrix.qt.pyqt_version }}
+      SYSTEM_VERSION_COMPAT: 0
 
     steps:
       - uses: actions/checkout@v3
