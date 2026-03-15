@@ -352,6 +352,7 @@ class Configuration:
     qt_architecture = attr.ib()
     qt_compiler = attr.ib()
     pyqt_version = attr.ib()
+    pyqt_qt_version = attr.ib()
     pyqt_major = attr.ib()
     pyqt_source_path = attr.ib()
     platform = attr.ib()
@@ -364,17 +365,22 @@ class Configuration:
     def build(cls, environment, build_path, package_path):
         platform = sys.platform
         qt_version = environment['QT_VERSION']
+        qt_version_ints = tuple(int(s) for s in qt_version.split('.'))
 
         if platform == 'linux':
             qt_compiler = 'gcc_64'
             qt_architecture = 'gcc_64'
+            if qt_version_ints >= (6, 7):
+                qt_architecture = f'linux_{qt_architecture}'
         elif platform == 'darwin':
             qt_compiler = 'clang_64'
             qt_architecture = 'clang_64'
         elif platform == 'win32':
             # TODO: change the actual storage
             
-            if tuple(int(s) for s in qt_version.split('.')) >= (5, 15):
+            if qt_version_ints >= (6, 8):
+                year = '2022'
+            elif qt_version_ints >= (5, 15):
                 year = '2019'
             else:
                 year = '2017'
@@ -390,6 +396,7 @@ class Configuration:
                 qt_architecture += '_64'
 
         pyqt_version = environment['PYQT_VERSION']
+        pyqt_qt_version = environment['PYQT_QT_VERSION']
 
         return cls(
             qt_version=qt_version,
@@ -397,6 +404,7 @@ class Configuration:
             qt_architecture=qt_architecture,
             qt_compiler=qt_compiler,
             pyqt_version=pyqt_version,
+            pyqt_qt_version=pyqt_qt_version,
             pyqt_major=pyqt_version.partition('.')[0],
             pyqt_source_path=build_path / 'pyqt',
             platform=platform,
@@ -845,8 +853,14 @@ def patch_pyqt(configuration, qt_paths):
         / 'pluginloader.{}.patch'.format(configuration.pyqt_version)
     )
 
-    patchset = patch.fromfile(fspath(patch_path))
-    patchset.apply(strip=1)
+    subprocess.run(
+        args=['git', 'apply', fspath(patch_path)],
+        cwd=fspath(configuration.pyqt_source_path),
+    )
+
+    # patchset = patch.fromfile(fspath(patch_path))
+    # if patchset.apply(strip=1) != 0:
+    #     raise RuntimeError('Failed to apply patch')
 
 
 def build_pyqt(configuration, qt_paths):
