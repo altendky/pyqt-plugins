@@ -3,6 +3,14 @@ pyqt-plugins
 ============
 
 
+**This repository has moved.** pyqt-plugins is now developed in
+`altendky/pyqt-tools <https://github.com/altendky/pyqt-tools/tree/main/packages/pyqt-plugins>`__,
+under ``packages/pyqt-plugins``.  qt-applications, qt-tools, pyqt-plugins and
+pyqt-tools depend on each other, so they were merged into that one repository
+where a change across them can be made and tested together.  They are still
+published to PyPI as separate packages.  This repository is archived, so please
+open issues and pull requests there.
+
 |PyPI| |Pythons| |GitHub|
 
 Perhaps docs will follow but for now see `the pyqt6-tools readme`_.  This
